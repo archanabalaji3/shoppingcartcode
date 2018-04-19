@@ -21,89 +21,75 @@ import com.niit.shoppingcart.domain.Supplier;
 
 @Controller
 public class AdminController {
-	@Autowired
-	HttpSession httpSession;
 	
+	private static Logger log = LoggerFactory.getLogger(AdminController.class);
 	@Autowired
 	private CategoryDAO categoryDAO;
-	
-	@Autowired
-	private Product product;
-	
-	@Autowired
-	private ProductDAO productDAO;
-	
-	@Autowired
-	private Supplier supplier;
-	
 	@Autowired
 	private SupplierDAO supplierDAO;
-	
+	@Autowired
+	private ProductDAO productDAO;
 	@Autowired
 	private Category category;
-	
-	Logger log= LoggerFactory.getLogger(AdminController.class);
-	
-	@GetMapping("/managecategories")
-	public ModelAndView adminClickCategories()
-	{
-		ModelAndView mv= new ModelAndView("Home");
-		
-		String loggedInUserId= (String)httpSession.getAttribute("loggedInUserId"); //check if logged in or not
-		if (loggedInUserId==null)
-		{
-			mv.addObject("errorMessage", "Please login to do this operation");
-			return mv;
-		}
-		
-		boolean isAdmin= (Boolean)httpSession.getAttribute("isAdmin"); //if logged in check if admin or not
-		if (isAdmin==false)
-		{
-			mv.addObject("errorMessage", "You are not authorized to do this operation");
-			return mv;
-		}
-		
-		log.debug("Starting of the method adminClickedCategories");
-		
-		mv.addObject("isadminClickCategories", true);
-		category=(Category) httpSession.getAttribute("category");
-		mv.addObject("category",category);
-		List<Category> categories= categoryDAO.list();					//fetches all categories again
-		httpSession.setAttribute("categories", categories);
-		
-		log.debug("Ending of the method adminClickedCategories");
-		return mv;
-	}
-	
-	@GetMapping("/managesuppliers")
-	public ModelAndView adminClickSuppliers()
-	{
-		log.debug("Start of the method AdminClickedSuppliers");
-		ModelAndView mv= new ModelAndView("Home");
-		mv.addObject("isadminClickSuppliers", true);
-		List<Supplier> suppliers= supplierDAO.list();
-		httpSession.setAttribute("suppliers", suppliers);
-		
-		log.debug("End of the method AdminClickedSuppliers");
-		return mv;
-	}
-	
-	@GetMapping("/manageproducts")
-	public ModelAndView adminClickProducts()
-	{
-		log.debug("Start of the method AdminClickedProducts");
-		
-		ModelAndView mv= new ModelAndView("Home");
-		mv.addObject("isadminClickProducts", true);
-		List<Product> products= productDAO.list();		//to fetch the table
-		List<Category> categories= categoryDAO.list();	//to fetch in the dropdown and navbar
-		List<Supplier> suppliers= supplierDAO.list();	//same
+	@Autowired
+	private Supplier supplier;
+	@Autowired
+	private Product product;
+	@Autowired
+	HttpSession httpSession;
 
-		httpSession.setAttribute("products", products);
-		httpSession.setAttribute("categories", categories);
-		httpSession.setAttribute("suppliers", suppliers);
+	@GetMapping("/managecategories")
+	public ModelAndView adminClickedCategories() 
+	{
+		ModelAndView mv = new ModelAndView("home");
+		String loggedInUserID = (String) httpSession.getAttribute("loggedInUserID");  // check whether user logged or not
+		if (loggedInUserID == null) 
+		{
+			mv.addObject("errorMessage", "Please login to do this operation");       // if not logged, "Please loging to do this opertaion
+			return mv;
+		}
+
+		Boolean isAdmin = (Boolean) httpSession.getAttribute("isAdmin");    // if the role of user is not admin,"You are not authorized to do this operation
+		if (isAdmin == null || isAdmin == false)                                     
+			{
+			mv.addObject("errorMessage", "You are not autheroized to do this operations.");
+			return mv;
+		}
+		log.debug("starting of the method admincClickedCategories");
+
+		mv.addObject("isAdminClickedManageCategories", true);
 		
-		log.debug("End of the method AdminClickedProducts");
+		List<Category> categories = categoryDAO.list(); // fetch all the categories again and set to http session.
+		httpSession.setAttribute("categories", categories);
+		log.debug("ending of the method admincClickedCategories");
 		return mv;
 	}
+
+	@GetMapping("/managesuppliers")
+	public ModelAndView admincClickedSupplier() {
+		log.debug("starting of the method admincClickedSupplier");
+		ModelAndView mv = new ModelAndView("home");
+		mv.addObject("isAdminClickedManageSuppliers", true);
+		List<Supplier> suppliers = supplierDAO.list();
+		httpSession.setAttribute("suppliers", suppliers);
+		log.debug("ending of the method admincClickedSupplier");
+		return mv;
+	}
+
+	@GetMapping("/manageproducts")
+	public ModelAndView admincClickedProducts() {
+		log.debug("starting of the method admincClickedProducts");
+		ModelAndView mv = new ModelAndView("home");
+		mv.addObject("isAdminClickedManageProducts", true);
+		List<Category> categories = categoryDAO.list();       // fetch all categories and supplier set it to http sesion.
+		List<Supplier> suppliers = supplierDAO.list();
+		List<Product> products = productDAO.list();
+
+		httpSession.setAttribute("categories", categories);
+		httpSession.setAttribute("suppliers", suppliers);
+		httpSession.setAttribute("products", products);
+		log.debug("ending of the method admincClickedProducts");
+		return mv;
+	}
+
 }

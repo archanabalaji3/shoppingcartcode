@@ -18,65 +18,54 @@ import com.niit.shoppingcart.domain.Supplier;
 @Transactional
 @Repository("supplierDAO")
 public class SupplierDAOimpl implements SupplierDAO {
+	
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	@Autowired 
+	@Autowired
 	private Supplier supplier;
-	
-	Logger log= LoggerFactory.getLogger(SupplierDAOimpl.class);
-	
-	public boolean save(Supplier supplier) {
-		
-		log.debug("Starting of the save method");
+
+	public boolean save(Supplier supplier) 
+	{
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(supplier);
-			log.debug("Ending of the save method");
 			return true;
 		} catch (HibernateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 	}
 
-	public boolean update(Supplier supplier) {
-		log.debug("Starting of the save method");
+	public boolean update(Supplier supplier) 
+	{
 		try {
 			sessionFactory.getCurrentSession().update(supplier);
-			log.debug("Ending of the update method");
-			return false;
+			return true;
 		} catch (HibernateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
+
 	}
 
-	public Supplier get(String supplier_id) {
-		return sessionFactory.getCurrentSession().get(Supplier.class, supplier_id);
+	public Supplier get(String emailID) {
+		return sessionFactory.getCurrentSession().get(Supplier.class, emailID);
 	}
 
-	public List<Supplier> list() {
-		//return sessionFactory.getCurrentSession().createQuery("from Supplier").list();
-		log.debug("Starting and ending of the list method");
-		return(List<Supplier>)sessionFactory.getCurrentSession().createCriteria(Supplier.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
-	}
-
-	public boolean delete(String supplier_id) {
-		log.debug("Starting of the delete method");
-		try{
-			supplier= get(supplier_id);
-			if (supplier== null){
+	public boolean delete(String emailID) {
+		try {
+			supplier = get(emailID);
+			if (supplier == null) {
 				return false;
 			}
 			sessionFactory.getCurrentSession().delete(supplier);
-			log.debug("Ending of the delete method");
 			return true;
-		}
-		catch(HibernateException e){
+		} catch (HibernateException e) {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public List<Supplier> list() {
+	return	sessionFactory.getCurrentSession().createQuery("from Supplier").list();
 	}
 }

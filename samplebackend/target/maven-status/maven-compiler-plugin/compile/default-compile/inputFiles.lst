@@ -1,2 +1,16 @@
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\domain\Category.java
 E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\cofig\ApplicationContextConfig.java
-E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\domain\user.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\domain\User.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\domain\Supplier.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\daoimpl\CategoryDAOimpl.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\domain\Cart.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\daoimpl\SupplierDAOimpl.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\dao\CartDAO.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\daoimpl\CartDAOimpl.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\dao\CategoryDAO.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\dao\UserDAO.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\daoimpl\ProductDAOimpl.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\dao\ProductDAO.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\dao\SupplierDAO.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\domain\Product.java
+E:\ARCHANA\mavenshopping\samplebackend\src\main\java\com\niit\shoppingcart\daoimpl\UserDAOimpl.java

@@ -49,90 +49,61 @@ public class SpringSecurityController {
 	private Product product;
 	@Autowired
 	private ProductDAO productDAO;
-	
-	// authentication-failure-forward-url="/loginError"
-		@RequestMapping(value = "/loginError", method = RequestMethod.GET)
-		public String loginError(Model model) 
+
+	                                 // authentication-failure-forward-url="/loginError"
+	@RequestMapping(value = "/loginError", method = RequestMethod.GET)
+	public String loginError(Model model) 
+	{
+		log.debug("Starting of the method loginError");
+		model.addAttribute("errorMessage", "Invalid Credentials.  Please try again.");
+		log.debug("Ending of the method loginError");
+		return "home";
+	}
+
+	                              // <security:access-denied-handler error-page="/accessDenied" />
+	@RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
+	public String accessDenied(Model model) 
+	{
+		log.debug("Starting of the method accessDenied");
+		model.addAttribute("errorMessage", "You are not authorized to access this page");
+		log.debug("Ending of the method accessDenied");
+		return "home";
+	}
+
+	@RequestMapping(value = "checkRole", method = RequestMethod.GET)
+	public ModelAndView checkRole(HttpServletRequest request, HttpServletResponse response) throws Exception 
+	{
+		log.debug("starting of the method validate");
+		ModelAndView mv = new ModelAndView("home");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userID = auth.getName();
+		session.setAttribute("loggedInUser", userID);
+		if (request.isUserInRole("A")) 
 		{
-			log.debug("Starting of the method loginError");
-			model.addAttribute("errorMessage", "Invalid Credentials.  Please try again.");
-			//model.addAttribute("invalidCredentials", "true");
-			log.debug("Ending of the method loginError");
-			return "home";
-
-		}
-
-		// <security:access-denied-handler error-page="/accessDenied" />
-		@RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
-		public String accessDenied(Model model) 
+			session.setAttribute("isAdmin", true);
+		} else 
 		{
-			log.debug("Starting of the method accessDenied");
-			model.addAttribute("errorMessage", "You are not authorized to access this page");
-
-			log.debug("Ending of the method accessDenied");
-			return "home";
-
+			session.setAttribute("isAdmin", false);
+			session.setAttribute("cart", cart);
+			List<Cart> cartList = cartDAO.list(userID);           // Fetch the cart list based on user ID
+			session.setAttribute("cartList", cartList);
+			session.setAttribute("cartSize", cartList.size());
 		}
-	
-		//@RequestMapping(value = "validate", method = RequestMethod.GET)
-		@RequestMapping(value = "checkRole", method = RequestMethod.GET)
-		public ModelAndView checkRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
-			log.debug("starting of the method validate");
-			ModelAndView mv = new ModelAndView("home");
-			// session = request.getSession(true);
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			String userID = auth.getName();
-			session.setAttribute("loggedInUser", userID);
+		log.debug("Ending of the method validate");
+		return mv;
+	}
 
-			if (request.isUserInRole("A")) {
-
-				session.setAttribute("isAdmin", true);
-
-			} else {
-
-				session.setAttribute("isAdmin", false);
-				
-				session.setAttribute("cart", cart);
-				// Fetch the cart list based on user ID
-				List<Cart> cartList = cartDAO.list(userID);
-				session.setAttribute("cartList", cartList);
-				session.setAttribute("cartSize", cartList.size());
-				//session.setAttribute("totalAmount", cartDAO.getTotalAmount(userID));
-			}
-			log.debug("Ending of the method validate");
-			return mv;
-		}
-	
-		@RequestMapping("/secure_logout")
-		public ModelAndView secureLogout()
-		{
-			//what you attach to session at the time login need to remove.
-			
-			//session.removeAttribute("loggedInUserID");
-			session.invalidate();
-			
-			ModelAndView mv = new ModelAndView("Home");
-			
-			//After logout also use should able to browse the categories and products
-			//as we invalidated the session, need to load these data again.
-			
-			session.setAttribute("category", category); // domain object names
-			session.setAttribute("product", product);
-			session.setAttribute("supplier", supplier);
-			
-			
-			session.setAttribute("categoryList", categoryDAO.list());
-			
-			session.setAttribute("supplierList", supplierDAO.list());
-			
-			session.setAttribute("productList", productDAO.list());
-			
-			
-			//OR Simply remove only one attribute from the session.
-			
-			//session.removeAttribute("loggedInUser"); // you no need to load categories,suppliers and products
-		
-			return mv;
-			
-		}
+	@RequestMapping("/secure_logout")
+	public ModelAndView secureLogout()                          //what attach to session at the time login need to remove when logout. 
+	{ 
+		session.invalidate();                                   //After logout use should able to browse the categories and products
+		ModelAndView mv = new ModelAndView("Home");             //we invalidated the session, need to load these data again
+		session.setAttribute("category", category); // domain object names
+		session.setAttribute("product", product);
+		session.setAttribute("supplier", supplier);
+		session.setAttribute("categoryList", categoryDAO.list());
+		session.setAttribute("supplierList", supplierDAO.list());
+		session.setAttribute("productList", productDAO.list());     
+		return mv;
+	}
 }

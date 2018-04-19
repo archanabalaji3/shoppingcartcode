@@ -21,87 +21,95 @@ private static AnnotationConfigApplicationContext context;
 	private static UserDAO userDAO;
 	
 	@Autowired
-	private static User user;								
+	private static User user;
+	
 	
 	@BeforeClass
 	public static void init()
 	{
-		context= new AnnotationConfigApplicationContext();
-		context.scan("com.niit");
+		context = new AnnotationConfigApplicationContext();
+		//scan the complete package and check for annoations like
+		//@Component, @Controller, @Repository, @Service
+		context.scan("com.niit"); 
+		//clear the context(bean factory, and recreate all the
+		//instances of the classes which are there in com.niit
+		//with proper annotations.
 		context.refresh();
-		userDAO= (UserDAO)context.getBean("userDAO");
-		user= (User)context.getBean("user");
+		//ask the context to get instance of UserDAO
+		userDAO = (UserDAO)context.getBean("userDAO");
+		user = (User)context.getBean("user");
 	}
-	
 	@Test
 	public void saveUserTestCase()
 	{
-		/*user.setEmailID("maya@gmail.com");
-		user.setMobile("345678912");
-		user.setFullname("maya");
-		user.setPwd("maya123");
-		boolean status= userDAO.save(user);
-		assertEquals("save user test case", true, status);*/
-		
+		user = new User();
 		user.setEmailID("maya@gmail.com");
-		user.setMobile("1234567890");
-		user.setFullname("maya");
+		user.setName("Maya");
 		user.setPwd("maya123");
-		boolean status= userDAO.save(user);
-		assertEquals("save user test case", true, status);
-		
-		
-		
-		
+		user.setMobile("3333333333");
+		user.setRegisteredDate("");
+   	  boolean status = 	userDAO.save(user);
+	  assertEquals("save user test case", true, status);
 	}
+	
 	
 	/*@Test
 	public void updateUserTestCase()
 	{
-		user.setEmailID("maya@gmail.com");
-		user.setMobile("111111111");
-		boolean status= userDAO.update(user);
-		assertEquals("update user test case", true, status); 					
+		user.setEmailID("mike@gmail.com");
+		user.setMobile("626262626");
+		boolean status = userDAO.update(user);
+		assertEquals("update test case", true,status );
 	}
 	
 	@Test
-	public void getUserSucceedsTestCase()
+	public void getUserSuccessTestCase()
 	{
-		user= userDAO.get("priya@gmail.com");
-		assertNotNull("get user test case", user);
-	}
-	@Test
-	public void getUserFailsTestCase()
-	{
-		user= userDAO.get("jaya@gmail.com");
-		assertNull("get user test case fails", user);
+		
+	user= userDAO.get("mike@gmail.com");
+	
+	assertNotNull("get user test case", user);
 	}
 	
 	@Test
-	public void deleteUserSucceedsTestCase()	
+	public void getUserFailureTestCase()
 	{
-		boolean status= userDAO.delete("maya@gmail.com");
-		assertEquals("delete user success test case", true, status);
+		
+	user= userDAO.get("ji@gmail.com");
+	
+	assertNull("get user test case", user);
 	}
+	
 	@Test
-	public void deleteUserFailsTestCase()	
+	public void deleteUserSuccessTestCase()
 	{
-		boolean status= userDAO.delete("mahesh2@gmail.com");
-		assertEquals("delete user failure test case", false, status);
+	boolean status =	userDAO.delete("mickkey@gmail.com");
+	assertEquals("delete user succss test case" , true, status);
+	
 	}
+	
+	@Test
+	public void deleteUserFailureTestCase()
+	{
+	boolean status =	userDAO.delete("ae@gmail.com");
+	assertEquals("delete user failure test case" , false, status);
+	
+	}
+	
 	
 	@Test
 	public void getAllUsersTestCase()
 	{
-		List<User> users= userDAO.list();							//call userDAO by object
-		assertEquals("get all users", 4, users.size());
-	}
-
+	List<User>	users = userDAO.list();
 	
+	assertEquals("get all usres " , 3, users.size() );
+	
+	}
 	@Test
-	public void validateCredentialsTestCase()
+	public void validateCredentailsTestCase()
 	{
-		user= userDAO.validate("jaskaran@gmail.com", "jas@123");
-		assertNotNull("validate user test case", user);
+	user = 	userDAO.validate("aulrin@gmail.com","aul@123");
+	assertNotNull("Validate test case",user );
+	
 	}*/
 }

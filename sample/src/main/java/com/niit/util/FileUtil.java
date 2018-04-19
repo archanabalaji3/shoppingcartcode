@@ -14,29 +14,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileUtil {
-	private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
-
+	
+	@Autowired
 	private static Path path;
-	public static boolean fileCopyNIO(MultipartFile file, String fileName,HttpServletRequest request) {
-		
-		String rootDirectory= request.getSession().getServletContext().getRealPath("/");
-		path = Paths.get(rootDirectory + "\\resources\\images\\ShoppingCartImages\\"+fileName);
-		
-		
-		File dest = new File(path.toString());
-		System.out.println("Where is it uploading?"+ dest.getAbsolutePath());
-		if (!dest.exists()) {
-			dest.mkdir();
-		}
+	private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+	
+	public boolean fileCopyNIO(MultipartFile file, String fileName,HttpServletRequest request) 
+	{
+     	String rootDirectory= request.getSession().getServletContext().getRealPath("/");
+	    path = Paths.get(rootDirectory + "\\resources\\images\\"+fileName);	
+	    File dest = new File(path.toString());
 
+		System.out.println("where it is uploading ??" + dest.getAbsolutePath());
 		try {
 			file.transferTo(dest);
 			return true;
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-
 }

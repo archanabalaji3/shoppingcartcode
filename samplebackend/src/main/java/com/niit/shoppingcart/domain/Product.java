@@ -1,8 +1,5 @@
 package com.niit.shoppingcart.domain;
 
-import java.io.Serializable;
-import java.sql.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -16,76 +13,97 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 @Entity
 @Table
-public class Product implements Serializable {
+public class Product  {
+	
 	@Id
-	private String product_id;
+	private String id;
 	private String name;
+	private String description;
 	private int price;
-	private Date date_created;
-	private String cat_id;
-	private String sup_id;
+	private String categoryId;
+	private String supplierId;
+	@Transient
+	MultipartFile pimage;
 	
-	@ManyToOne
-	@JoinColumn(name="cat_id", updatable= false, insertable= false, nullable= false)
-	private Category category;
-	
-	@ManyToOne
-	@JoinColumn(name="sup_id", updatable= false, nullable= false, insertable= false)
-	private Supplier supplier;
-	
-	
-	public String getCat_id() {
-		return cat_id;
+	public MultipartFile getPimage() {
+		return pimage;
 	}
-	public void setCat_id(String cat_id) {
-		this.cat_id = cat_id;
+
+	public void setPimage(MultipartFile pimage) {
+		this.pimage = pimage;
 	}
-	public String getSup_id() {
-		return sup_id;
-	}
-	public void setSup_id(String sup_id) {
-		this.sup_id = sup_id;
-	}
-	
-	
-	public String getProduct_id() {
-		return product_id;
-	}
-	public void setProduct_id(String product_id) {
-		this.product_id = product_id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+
 	public int getPrice() {
 		return price;
 	}
+
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public Date getDate_created() {
-		return date_created;
+
+	@ManyToOne
+	@JoinColumn(name = "categoryId", updatable = false, insertable = false, nullable = false)
+	private Category category;
+
+	@ManyToOne
+	@JoinColumn(name = "supplierid", nullable = false, updatable = false, insertable = false)
+	private Supplier supplier;
+
+	public String getId() {
+		return id;
 	}
-	public void setDate_created(Date date_created) {
-		this.date_created = date_created;
+
+	public void setId(String id) {
+		this.id = id;
 	}
-	
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getSupplierId() {
+		return supplierId;
+	}
+
+	public String getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public void setSupplierId(String supplierId) {
+		this.supplierId = supplierId;
+	}
+
 	public Category getCategory() {
 		return category;
 	}
+
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
 	public Supplier getSupplier() {
 		return supplier;
 	}
+
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
 	}
-	
+
 	
 }

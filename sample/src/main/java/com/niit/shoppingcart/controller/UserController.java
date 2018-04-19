@@ -2,92 +2,84 @@ package com.niit.shoppingcart.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.niit.shoppingcart.dao.CartDAO;
+import com.niit.shoppingcart.dao.CategoryDAO;
+import com.niit.shoppingcart.dao.ProductDAO;
+import com.niit.shoppingcart.dao.SupplierDAO;
 import com.niit.shoppingcart.dao.UserDAO;
 import com.niit.shoppingcart.domain.Cart;
+import com.niit.shoppingcart.domain.Category;
+import com.niit.shoppingcart.domain.Product;
+import com.niit.shoppingcart.domain.Supplier;
 import com.niit.shoppingcart.domain.User;
 
 @Controller 
 public class UserController {
+	
 	@Autowired
 	private UserDAO userDAO;
-	
 	@Autowired
 	private User user;
-	
+	@Autowired
+	private Cart cart;
+	@Autowired
+	private CartDAO cartDAO;
 	@Autowired
 	HttpSession httpSession;
 	
-	@Autowired
-	private Cart cart;
-	
-	@Autowired
-	private CartDAO cartDAO;
-	
-	Logger log= LoggerFactory.getLogger(UserController.class);
-	
-	@PostMapping("validate")
-	public ModelAndView validate(@RequestParam("mailid") String mail, @RequestParam("psw") String password)
+	@PostMapping("validate")       //send user id and password from jsp to controller,it should validate the credentials.
+	public ModelAndView validate(@RequestParam("uname") String username, @RequestParam("psw") String password)
 	{
-		log.debug("Starting of the validate method");
-		
-		ModelAndView mv= new ModelAndView("Home"); 
-		user= userDAO.validate(mail, password);
-		if (user==null)
+		ModelAndView mv = new ModelAndView("home");
+		user = userDAO.validate(username, password);
+		if (user == null) 
 		{
-			mv.addObject("fail", "Invalid email id or password");
-		}
-		else
+			mv.addObject("errorMessage", "Invalid user, Pls try again.");
+			mv.addObject("loginerror", true);
+		} else 
 		{
-			httpSession.setAttribute("success", "Welcome "+ user.getFullname());
-			httpSession.setAttribute("loggedInUserId", user.getEmailID());
-			httpSession.setAttribute("ifLoggedIn", true);					//?
-			
-			List<Cart> carts= cartDAO.list(user.getEmailID());
-			httpSession.setAttribute("size", carts.size());
-			httpSession.setAttribute("carts", carts);
-			
-			if (user.getRole()=='A'){
+			httpSession.setAttribute("welcomeMessage", "Welcome Mr./Ms " + user.getName());  //valid credentials.
+			httpSession.setAttribute("loggedInUserID", user.getEmailID());
+			httpSession.setAttribute("isLoggedIn", true);
+			List<Cart> cartList = cartDAO.list(user.getEmailID());
+			int cartSize = cartList.size();                                                  
+			httpSession.setAttribute("cartSize",cartSize);
+			httpSession.setAttribute("cartList", cartList);
+			if (user.getRole() == 'A') 
+			{
 				httpSession.setAttribute("isAdmin", true);
 			}
 		}
-
-		log.debug("End of the validate method");
 		return mv;
 	}
-	
-	@PostMapping("from_form")
-	public ModelAndView from_form(@RequestParam("email") String mail, @RequestParam("psw") String password, 
-								  @RequestParam("mob") String mobile, @RequestParam("fullname") String name) 
-								  
+
+	@PostMapping("registration")
+	public ModelAndView registration(@RequestParam("email") String email, @RequestParam("psw") String password,
+			                         @RequestParam("mob") String mobile, @RequestParam("name") String name) 
 	{
-		log.debug("Starting of the from_form method");
-		
-		ModelAndView mv= new ModelAndView("Home");
-		
-		user.setEmailID(mail);
+		ModelAndView mv = new ModelAndView("home");
+		user.setEmailID(email);
 		user.setMobile(mobile);
-		user.setFullname(name);
+		user.setName(name);
 		user.setPwd(password);
-		
-
+		System.out.println(user.getEmailID());
 		userDAO.save(user);
-		
-		httpSession.setAttribute("success", "Welcome "+ user.getFullname()+ ". You have successfully created an account with us ");
-		mv.addObject("sinceUserClickedLogin", true);
-
-		log.debug("End of the from_form method");
+		mv.addObject("isclickedregister",true);
 		return mv;
 	}
 }

@@ -23,58 +23,85 @@ private static AnnotationConfigApplicationContext context;
 	@Autowired
 	private static Supplier supplier;
 	
+	
 	@BeforeClass
 	public static void init()
 	{
-		context= new AnnotationConfigApplicationContext();
-		context.scan("com.niit");
+		context = new AnnotationConfigApplicationContext();
+		//scan the complete package and check for annoations like
+		//@Component, @Controller, @Repository, @Service
+		context.scan("com.niit"); 
+		//clear the context(bean factory, and recreate all the
+		//instances of the classes which are there in com.niit
+		//with proper annotations.
 		context.refresh();
-		supplier= (Supplier)context.getBean("supplier");
-		supplierDAO= (SupplierDAO)context.getBean("supplierDAO");
+		//ask the context to get instance of SupplierDAO
+		supplierDAO = (SupplierDAO)context.getBean("supplierDAO");
+		supplier = (Supplier)context.getBean("supplier");
+	}
+	@Test
+	public void saveSupplierTestCase()
+	{
+		supplier = new Supplier();
+		supplier.setId("sup3");
+		supplier.setName("ThirsSupplier");
+		supplier.setAddress("Delhi");
+		
+	  boolean status = 	supplierDAO.save(supplier);
+	  
+	  assertEquals("save supplier test case", true, status);
+	}
+	
+	
+	@Test
+	public void updateSupplierTestCase()
+	{
+		supplier.setId("002");
+		supplier.setName("Ebay");
+		supplier.setAddress("Guindy ,chennai");
+		boolean status = supplierDAO.update(supplier);
+		assertEquals("update test case", true,status );
 	}
 	
 	@Test
-	public void saveSupplierTestCase() {
-		supplier.setSupplier_id("sup-03");
-		supplier.setName("Supplier3");
-		supplier.setAddress("Chennai");
-		supplierDAO.save(supplier);
-		}
-
-	@Test
-	public void updateSupplierTestCase(){
-		supplier.setSupplier_id("sup-07");
-		supplier.setName("Retail.net");
-		supplier.setAddress("NH-33");
-		boolean status= supplierDAO.update(supplier);
-		assertEquals("Successfully updated", true, status);
+	public void getSupplierSuccessTestCase()
+	{
+		
+	supplier= supplierDAO.get("001");
+	
+	assertNotNull("get supplier test case", supplier);
 	}
 	
 	@Test
-	public void getSupplierTestCaseSuccess(){
-		supplier= supplierDAO.get("02");
-		assertNotNull("getting supplier test case", supplier);
-	}
-	@Test
-	public void getSupplierTestCaseFail(){
-		supplier= supplierDAO.get("08");
-		assertNull("getting supplier test case fails", supplier);
+	public void getSupplierFailureTestCase()
+	{
+		
+	supplier= supplierDAO.get("001");
+	
+	assertNull("get supplier test case", supplier);
 	}
 	
 	@Test
-	public void deleteSupplierTestCaseSuccess(){
-		boolean status= supplierDAO.delete("06");
-		assertEquals("Deleted properly", true, status);
-	}
-	@Test
-	public void deleteSupplierTestCaseFail(){
-		boolean status= supplierDAO.delete("06");
-		assertEquals("Not deleted", false, status);
+	public void deleteSupplierSuccessTestCase()
+	{
+	boolean status = supplierDAO.delete("001");
+	assertEquals("delete supplier succss test case" , true, status);
+	
 	}
 	
 	@Test
-	public void getAllSuppliersTestCase(){
-		List<Supplier> suppliers= supplierDAO.list();
-		assertEquals("list of all suppliers", 2, suppliers.size());
+	public void deleteSupplierFailureTestCase()
+	{
+	boolean status = supplierDAO.delete("003");
+	assertEquals("delete supplier failure test case" , false, status);
+	
+	}
+	
+	
+	@Test
+	public void getAllSuppliersTestCase()
+	{
+	List<Supplier>	suppliers = supplierDAO.list();
+	assertEquals("get all usres " , 3, suppliers.size() );
 	}
 }

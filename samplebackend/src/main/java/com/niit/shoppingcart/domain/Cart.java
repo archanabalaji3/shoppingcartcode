@@ -16,17 +16,28 @@ import org.springframework.stereotype.Component;
 @Table                      
 public class Cart {
 		
-	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
+	@Id    //to specify that it is primary key
 	private int id;
-	private String emailid;
+	private String emailID;
 	private String productName;
 	private int price;
 	private int quantity;
 	private String productID;
-	
-	@Transient
+    @Transient               //we are not going persist/save this data in table.
 	private int total;
+	
+	public String getProductID() {
+		return productID;
+	}
+	public void setProductID(String productID) {
+		this.productID = productID;
+	}
+	public int getTotal() {
+		return total;
+	}
+	public void setTotal(int total) {
+		this.total = total;
+	}
 	
 	public int getId() {
 		return id;
@@ -34,12 +45,11 @@ public class Cart {
 	public void setId() {
 		this.id = new Random().nextInt();
 	}
-	
-	public String getEmailid() {
-		return emailid;
+	public String getEmailID() {
+		return emailID;
 	}
-	public void setEmailid(String emailid) {
-		this.emailid = emailid;
+	public void setEmailID(String emailID) {
+		this.emailID = emailID;
 	}
 	public String getProductName() {
 		return productName;
@@ -59,17 +69,4 @@ public class Cart {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public String getProductID() {
-		return productID;
-	}
-	public void setProductID(String productID) {
-		this.productID = productID;
-	}
-	public int getTotal() {
-		return total;
-	}
-	public void setTotal(int total) {
-		this.total = total;
-	}
-	
 }

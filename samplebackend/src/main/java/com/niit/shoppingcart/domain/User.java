@@ -1,6 +1,6 @@
 package com.niit.shoppingcart.domain;
 
-import java.sql.Date;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,53 +9,61 @@ import javax.persistence.Table;
 import org.springframework.stereotype.Component;
 
 @Component
-@Entity
-@Table(name="user")
+@Entity                          //specify it is not normal class-it is database entity
+@Table(name="user")             //to specify to which database table we need to map this class
 public class User {
-	@Id 										//to specify that it is a primary key
+	
+	@Id
 	private String emailID;
-	private String fullname;
-	@Column(name="password") 					//to specify to map to a certain column in database table
+	private String name;
+	@Column(name="password")
 	private String pwd;
 	private String mobile;
 	private Character role;
-	private Date registeredDate;
-		
-	public String getEmailID() {
+	private String registeredDate;
+	                           
+	                               //getter setter for emailid
+	public String getEmailID() { 
 		return emailID;
 	}
 	public void setEmailID(String emailID) {
 		this.emailID = emailID;
 	}
-	public String getFullname() {
-		return fullname;
+	                              //getter setter for Name
+	public String getName() {
+		return name;
 	}
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
+	public void setName(String name) {
+		this.name = name;
 	}
+	                              //getter setter for pwd(password)
 	public String getPwd() {
 		return pwd;
 	}
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
 	}
+	                           //getter setter for mobile
 	public String getMobile() {
 		return mobile;
 	}
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
+	                          // getter setter for role
 	public Character getRole() {
 		return role;
 	}
 	public void setRole(Character role) {
-		this.role = role;
+		
+		this.role = 'C';
 	}
-	public Date getRegisteredDate() {
+	                         //getter setter for Registered date
+	public String getRegisteredDate() {
 		return registeredDate;
 	}
-	public void setRegisteredDate(Date date) {
-		this.registeredDate = date;
+	public void setRegisteredDate(String registeredDate) {
+		this.registeredDate = registeredDate;
 	}
 	
 }

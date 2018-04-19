@@ -5,10 +5,10 @@ import com.niit.shoppingcart.domain.Category;
 
 public interface CategoryDAO {
 	
-    public boolean save(Category category);
-	public boolean update(Category category);
-	public Category get(String category_id);
-	public List<Category> list();
-	public boolean delete(String category_id);
-	
+	public boolean save(Category category);       //Save category
+	public boolean update(Category category);     //update the existing category
+	public Category get(String id);               //get particular category
+	public boolean delete(String id);             //delete particular category
+	public List<Category> list();                 //get all categories
+	 
 }

@@ -18,65 +18,56 @@ import com.niit.shoppingcart.domain.User;
 @Transactional
 @Repository("categoryDAO")
 public class CategoryDAOimpl implements CategoryDAO {
-	@Autowired
-	private Category category;
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	@Autowired
+	private Category category;
 
-	Logger log= LoggerFactory.getLogger(CategoryDAOimpl.class);
-	
 	public boolean save(Category category) {
-		log.debug("Starting of the save method");
-		try{
-		sessionFactory.getCurrentSession().saveOrUpdate(category);
-		log.debug("Ending of the save method");
-		return true;
-		}
-		catch(HibernateException e){
+		try {
+			sessionFactory.getCurrentSession().saveOrUpdate(category);
+			return true;
+		} catch (HibernateException e) {
 			e.printStackTrace();
 			return false;
 		}
+
 	}
 
 	public boolean update(Category category) {
-		log.debug("Starting of the save method");
-		try{
-		sessionFactory.getCurrentSession().update(category);
-		log.debug("Ending of the update method");
-		return false;
-		}
-		catch(HibernateException e){
+		try {
+			sessionFactory.getCurrentSession().update(category);
+			return true;
+		} catch (HibernateException e) {
 			e.printStackTrace();
 			return false;
 		}
+
 	}
 
-	public Category get(String category_id) {
-		return sessionFactory.getCurrentSession().get(Category.class, category_id);
+	public Category get(String id) {
+		return sessionFactory.getCurrentSession().get(Category.class, id);
+
 	}
 
-	public List<Category> list() {
-		//return sessionFactory.getCurrentSession().createQuery("from Category").list();
-		log.debug("List method");
-		return(List<Category>)sessionFactory.getCurrentSession().createCriteria(Category.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
-	}
-
-	public boolean delete(String category_id) {
-		log.debug("Starting of the delete method");
-		try{
-			category= get(category_id);
-			if (category== null){
+	public boolean delete(String id) {
+		try {
+			category = get(id);
+			if (category == null) {
 				return false;
 			}
 			sessionFactory.getCurrentSession().delete(category);
-			log.debug("Ending of the delete method");
 			return true;
-		} 
-		catch(HibernateException e){
+		} catch (HibernateException e) {
 			e.printStackTrace();
 			return false;
 		}
-	}	
 
+	}
+
+	public List<Category> list() {
+		return (List<Category>) sessionFactory.getCurrentSession().createCriteria(Category.class)
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+	}
 }

@@ -21,105 +21,77 @@ import com.niit.shoppingcart.domain.Category;
 
 @Controller
 public class CategoryController {
-	@Autowired
-	private CategoryDAO categoryDAO; 
 	
 	@Autowired
-	private Category category; 
-	
-	@Autowired 
+	private CategoryDAO categoryDAO;
+	@Autowired
+	private Category category;
+	@Autowired
 	HttpSession httpSession;
-	
-	Logger log= LoggerFactory.getLogger(CategoryController.class);
-	
+
 	@PostMapping("/category/save/")
-	public ModelAndView saveCategory(@RequestParam("category_id") String id, @RequestParam("name") String name, 
-									 @RequestParam("description") String description)
+	public ModelAndView saveCategory(@RequestParam("id") String id,@RequestParam("name") String name,
+			                          @RequestParam("description") String description) 
 	{
-		log.debug("Start of the category save method");
-		
-		ModelAndView mv= new ModelAndView("redirect:/managecategories");
-		category.setCategory_id(id);
+		ModelAndView mv = new ModelAndView("redirect:/managecategories");
+		category.setId(id);
 		category.setName(name);
 		category.setDescription(description);
-		
-		if (categoryDAO.save(category))
-		{
-			mv.addObject("categorysuccess", "Category saved successfully");
-			category.setCategory_id("");
-			category.setName("");
-			category.setDescription("");
-			
-			List<Category> categories = categoryDAO.list();					//fetches all categories again
-			httpSession.setAttribute("categories", categories);				//and sets to http session
+		if (categoryDAO.save(category)) {
+			mv.addObject("categorySuccessMessage", "The category created successfully");
+		} else {
+			mv.addObject("categoryErrorMessage", "Coulc not able to create category.  please contact admin");
 		}
-		else{
-			mv.addObject("categoryerror", "Couldn't save");
-		}
-		
-		log.debug("End of the category save method");
 		return mv;
 	}
-		
+
 	@PutMapping("/category/update/")
-	public ModelAndView updateCategory(@ModelAttribute Category category)
-	{
-		log.debug("Start of the category update method");
-		
-		ModelAndView mv= new ModelAndView("Home");
-		if (categoryDAO.update(category)==true){
-			mv.addObject("categorysuccess", "Successfully updated");
-		}
-		else{
-			mv.addObject("categoryerror", "Failed to update");
-		}
+	public ModelAndView updateCategory(@ModelAttribute Category category) {
+		// navigate to home page
+		ModelAndView mv = new ModelAndView("home");
 
-		log.debug("End of the category update method");
-		return mv;
-	}
-	
-	@GetMapping("/Allcategories")
-	public ModelAndView  getAllCategories()
-	{
-		log.debug("Start of the get all categories method");
-		
-		ModelAndView mv= new ModelAndView("Home");
-		List<Category> categories= categoryDAO.list();
-		mv.addObject("categories", categories);
+		// call save method of categoryDAO
+		if (categoryDAO.update(category) == true) {
+			// add success message
+			mv.addObject("successMessage", "The category updated successfully");
+		} else {
+			// add failure message
+			mv.addObject("errorMessage", "Could not update the category.");
 
-		log.debug("End of the get all categories method");
+		}
 		return mv;
+
 	}
-	
+
 	@GetMapping("/category/delete")
-	public ModelAndView deleteCategory(@RequestParam("id") String id) //@RequestParam("category_id")
+	public ModelAndView deleteCategory(@RequestParam String id) 
 	{
-		log.debug("Start of the category delete method");
-		
-		ModelAndView mv= new ModelAndView("redirect:/managecategories");
-		if (categoryDAO.delete(id)==true){
-			mv.addObject("categorysuccess", "Deleted");
+		System.out.println("going to delete category : " + id);
+		ModelAndView mv = new ModelAndView("redirect:/managecategories");   //navigate to home page
+		if (categoryDAO.delete(id) == true) 
+		{                                                                  // add success message
+			mv.addObject("successMessage", "The category deleted successfully");
+		} else 
+		{
+			mv.addObject("errorMessage", "Could not delete the category."); // add failure message
 		}
-		else{
-			mv.addObject("categoryerror", "Not deleted");
-		}
-
-		log.debug("End of the category delete method");
 		return mv;
 	}
-	
+
 	@GetMapping("/category/edit")
-	public ModelAndView editCategory(@RequestParam("id") String id)
+	public ModelAndView editCategory(@RequestParam String id) 
 	{
-		log.debug("Start of the category edit method");
-		
-		ModelAndView mv= new ModelAndView("redirect:/managecategories");
-		category= categoryDAO.get(id);
-		httpSession.setAttribute("category", category);
-
-		log.debug("End of the category edit method");
+		ModelAndView mv = new ModelAndView("redirect:/managecategories");
+		category = categoryDAO.get(id);                                    // based on category id fetch category details.
+		httpSession.setAttribute("selectedCategory", category);
 		return mv;
-	}	
+	}
 
-
+	@GetMapping("/categories")
+	public ModelAndView getAllCategories() {
+		ModelAndView mv = new ModelAndView("home");
+		List<Category> categories = categoryDAO.list();
+		mv.addObject("categories", categories);
+		return mv;
+	}
 }

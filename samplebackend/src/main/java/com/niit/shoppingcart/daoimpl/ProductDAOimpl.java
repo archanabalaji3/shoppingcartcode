@@ -19,66 +19,63 @@ import com.niit.shoppingcart.domain.Product;
 @Transactional
 @Repository("productDAO")
 public class ProductDAOimpl implements ProductDAO {
-	@Autowired
+	@Autowired 
 	private SessionFactory sessionFactory;
-	
+
 	@Autowired
 	private Product product;
 
-	Logger log= LoggerFactory.getLogger(ProductDAOimpl.class);
-	
 	public boolean save(Product product) {
-		log.debug("Starting of the save method");
+		// store in the database.
 		try {
-			product.setDate_created(new Date(System.currentTimeMillis()));
-			
-			sessionFactory.getCurrentSession().saveOrUpdate(product);
-			log.debug("Ending of the save method");
+			sessionFactory.getCurrentSession().save(product);
 			return true;
 		} catch (HibernateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
+
 	}
 
 	public boolean update(Product product) {
-		log.debug("Starting of the update method");
 		try {
 			sessionFactory.getCurrentSession().update(product);
-			log.debug("Ending of the update method");
-			return false;
+			return true;
 		} catch (HibernateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
+
 	}
 
-	public Product get(String product_id) {
-		return sessionFactory.getCurrentSession().get(Product.class, product_id);
+	public Product get(String emailID) {
+		// it will fetch the record based on emailID and store in Product class
+		return sessionFactory.getCurrentSession().get(Product.class, emailID);
+
 	}
 
-	public List<Product> list() {
-//		return sessionFactory.getCurrentSession().createQuery("from Product").list();
-		log.debug("Starting and ending of the list method");
-		return(List<Product>)sessionFactory.getCurrentSession().createCriteria(Product.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
-	}
-
-	public boolean delete(String product_id) {
-		log.debug("Starting of the delete method");
-		try{
-			product= get(product_id);
-			if (product== null){
+	public boolean delete(String emailID) {
+		try {
+			product = get(emailID);
+			if (product == null) {
 				return false;
 			}
+
 			sessionFactory.getCurrentSession().delete(product);
-			log.debug("Ending of the delete method");
+
 			return true;
-		}
-		catch (HibernateException e){
+		} catch (HibernateException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
+
 	}
+
+	public List<Product> list() {
+	return	sessionFactory.getCurrentSession().createQuery("from Product").list();
+	}
+
 }

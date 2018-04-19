@@ -16,69 +16,85 @@ import com.niit.shoppingcart.domain.Product;
 
 public class ProductDAOTestcase {
 	
+private static AnnotationConfigApplicationContext context;
+	
 	@Autowired
 	private static ProductDAO productDAO;
 	
 	@Autowired
 	private static Product product;
 	
-	private static AnnotationConfigApplicationContext context;
 	
 	@BeforeClass
-	public static void init(){
-		context= new AnnotationConfigApplicationContext();
-		context.scan("com.niit");
+	public static void init()
+	{
+		context = new AnnotationConfigApplicationContext();
+		context.scan("com.niit"); 
 		context.refresh();
-		productDAO= (ProductDAO)context.getBean("productDAO");
-		product= (Product)context.getBean("product");
+		productDAO = (ProductDAO)context.getBean("productDAO");
+		product = (Product)context.getBean("product");
 	}
-	
-	@Test
-	public void saveProductTestCase() {
-		product.setProduct_id("p3");
-		product.setName("Handbag");
-		product.setPrice(3000);
-		productDAO.save(product);
-//		product.setCategory();
-//		product.setSupplier(supplier);
+	/*@Test
+	public void saveProductTestCase()
+	{
+		product = new Product();
+		product.setId("p2");
+		product.setName("AnalogWatch");
+		product.setDescription("This is Fasttrack product");
+		product.setCategoryId("cat1");
 		
+	  boolean status = 	productDAO.save(product);
+	  
+	  assertEquals("save product test case", true, status);
+	}
+	
+	
+	@Test
+	public void updateProductTestCase()
+	{
+		product.setId("001");
+		product.setName("Lenevo-prodcut");
+		product.setDescription("This is Lenevo product");
+		boolean status = productDAO.update(product);
+		assertEquals("update test case", true,status );
+	}
+	
+	@Test
+	public void getProductSuccessTestCase()
+	{
 		
-	}
-
-	@Test
-	public void updateProductTestCase(){
-		product.setProduct_id("p2");
-		product.setPrice(2200);
-		boolean status= productDAO.update(product);
-		assertEquals("Successfully updated", true, status);
+	product= productDAO.get("001");
+	
+	assertNotNull("get product test case", product);
 	}
 	
 	@Test
-	public void getProductSucceedsTestCase(){
-		product= productDAO.get("02");
-		assertNotNull("get product test case", product);
-	}
-	@Test
-	public void getProductFailsTestCase(){
-		product= productDAO.get("04");
-		assertNull("get product test case fails", product);
-	}
+	public void getProductFailureTestCase()
+	{
+		
+	product= productDAO.get("001");
+	
+	assertNull("get product test case", product);
+	}*/
 	
 	@Test
-	public void deleteProductSucceedsTestCase(){
-		boolean status= productDAO.delete("02");
-		assertEquals("Successfully deleted", true, status); 
-	}
-	@Test
-	public void deleteProductFailsTestCase(){
-		boolean status= productDAO.delete("06");
-		assertEquals("Unsuccessfully deleted", false, status); 
+	public void deleteProductSuccessTestCase()
+	{
+	boolean status =	productDAO.delete("p2");
+	assertEquals("delete product succss test case" , true, status);
+	
 	}
 	
-	@Test
-	public void getAllProductTestCase(){
-		List<Product> products= productDAO.list();
-		assertEquals("get all products", 1, products.size());
+	/*@Test
+	public void deleteProductFailureTestCase()
+	{
+	boolean status = productDAO.delete("001");
+	assertEquals("delete product failure test case" , false, status);
 	}
-
+	@Test
+	public void getAllProductsTestCase()
+	{
+	List<Product>	products = productDAO.list();
+	assertEquals("get all products " , 3, products.size() );
+	}*/
 }
