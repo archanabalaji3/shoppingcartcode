@@ -47,7 +47,9 @@ public class SupplierController {
 		supplier.setAddress(address);
 		if (supplierDAO.save(supplier)) 
 		{
+			httpSession.removeAttribute("selectedSupplier");
 			mv.addObject("supplierSuccessMessage", "The supplier created successfully");
+			
 		} else 
 		{
 			mv.addObject("supplierErrorMessage", "Coulc not able to create supplier.  please contact admin");
@@ -61,6 +63,7 @@ public class SupplierController {
 		ModelAndView mv = new ModelAndView("home");                        //navigate to home page.
 		if (supplierDAO.update(supplier) == true) 
 		{
+			httpSession.removeAttribute("selectedSupplier");
 			mv.addObject("successMessage", "The supplier updated successfully");
 		} else 
 		{

@@ -25,6 +25,7 @@ public class Cart {
 	private String productID;
     @Transient               //we are not going persist/save this data in table.
 	private int total;
+    private int subtotal;
 	
 	public String getProductID() {
 		return productID;
@@ -43,7 +44,7 @@ public class Cart {
 		return id;
 	}
 	public void setId() {
-		this.id = new Random().nextInt();
+		this.id = new Random().nextInt(100)+1;
 	}
 	public String getEmailID() {
 		return emailID;
@@ -69,4 +70,12 @@ public class Cart {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	public int getSubtotal() {
+		return subtotal;
+	}
+	public void setSubtotal(int subtotal) {
+		this.subtotal = subtotal;
+	}
+	
+	
 }

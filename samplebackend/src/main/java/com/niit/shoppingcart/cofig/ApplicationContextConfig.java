@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration//Indicates that a class declares one or more @Bean methods and may be 
                //processed by the Spring container to generate bean definitions and service requests for those beans at runtime. 
 @ComponentScan("com.niit.shoppingcart") //Configures component scanning directives for use with @Configuration classes
-@EnableTransactionManagement   //Enables Spring's annotation-driven transaction management capability, similar to the support found in Spring's <tx:*> XML namespace
+@EnableTransactionManagement   //Enables Spring's annotation-driven transaction management capability, similar to the support found in Spring's  XML namespace
 public class ApplicationContextConfig {
 	
 	@Bean(name = "dataSource")         //@Bean is a method-level annotation and a direct analog of the XML <bean/> element

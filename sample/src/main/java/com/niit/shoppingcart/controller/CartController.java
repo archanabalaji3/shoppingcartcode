@@ -54,6 +54,7 @@ public class CartController {
 		cart.setProductID(productID);
 		cart.setProductName(product.getName());
 		cart.setQuantity(1);
+		cart.setSubtotal(product.getPrice());
 		cart.setId();                         // to set a random number.
 		if (cartDAO.save(cart)) 
 		{
@@ -92,9 +93,8 @@ public class CartController {
 				mv.addObject("cartList",cartList);
 				mv.addObject("cartSize", cartList.size());
 				int cartsum = 0;
-				for (Cart a:cartList) 
-				{
-					cartsum = cartsum + a.getPrice();
+				for (Cart a:cartList) {
+					cartsum = cartsum + a.getSubtotal();
 				}
 				httpSession.setAttribute("cartsum", cartsum);
 				log.debug("No of products in cart"+ cartList.size());
@@ -110,13 +110,34 @@ public class CartController {
 		log.debug("Starting of the method editProductQuantity");
 		ModelAndView mv= new ModelAndView("redirect:/mycart");
 		cart=cartDAO.get(id);
-		cart.setQuantity((cart.getQuantity()+1));
-		cart.setPrice(cart.getPrice()*cart.getQuantity());
+		int qty = cart.getQuantity();
+		qty = qty+1;
+		cart.setSubtotal(cart.getPrice()*qty);
+		cart.setQuantity(qty);
 		cartDAO.update(cart);
 		log.debug("Ending of the method editProductQuantity");
 		return mv;
 	}
 	
+	@PostMapping("/editcartqtym/{id}")
+	public ModelAndView editProductQuantityminus(@PathVariable("id") int id)
+	{
+		log.debug("Starting of the method editProductQuantity");
+		ModelAndView mv= new ModelAndView("redirect:/mycart");
+		cart=cartDAO.get(id);
+		int qty = cart.getQuantity();
+		if(qty==1)
+		{
+			return mv;
+		}
+		qty = qty-1;
+		cart.setSubtotal(cart.getPrice()*qty);
+		cart.setQuantity(qty);
+		cartDAO.update(cart);
+		log.debug("Ending of the method editProductQuantity");
+		return mv;
+	}
+
 	@PostMapping("/deleteFromCart")
 	public ModelAndView deleteFromCart(@RequestParam int id) {
 		log.debug("Starting of the method removeProductFromCart");
@@ -131,7 +152,8 @@ public class CartController {
 	}
 
 	@PostMapping("/checkout")
-	public ModelAndView checkout() {
+	public ModelAndView checkout() 
+	{
 		ModelAndView mv = new ModelAndView("home");
 		mv.addObject("checkoutClicked", true);
 		String loggedInUserID = (String) httpSession.getAttribute("loggedInUserID");
@@ -139,10 +161,10 @@ public class CartController {
 		httpSession.setAttribute("cartList", cartList);
 		int cartsum = 0;
 		for (Cart a:cartList) {
-			cartsum = cartsum + a.getPrice();
+			cartsum = cartsum + a.getSubtotal();
 		}
 		httpSession.setAttribute("cartsum", cartsum);
-		int total = cartsum+100;
+		int total = cartsum+500;
 		httpSession.setAttribute("total", total);
 		return mv;
 	}

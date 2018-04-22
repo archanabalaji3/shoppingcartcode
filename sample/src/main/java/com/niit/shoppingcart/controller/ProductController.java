@@ -71,6 +71,7 @@ public class ProductController {
 			if (productDAO.save(product)) 
 			{
 				mv.addObject("productSuccessMessage", "The product created successfully");
+				httpSession.removeAttribute("selectedProduct");
 				if(fileUtil.fileCopyNIO(file, id +".PNG",req))                              //call upload image method
 				{
 					mv.addObject("uploadMessage", "product image successfully updated");
@@ -92,7 +93,8 @@ public class ProductController {
 		{
 			ModelAndView mv = new ModelAndView("home");                           //navigate to home page
 			if (productDAO.update(product) == true)                               //call update method of productDAO
-			{                            
+			{   
+				httpSession.removeAttribute("selectedProduct");
 				mv.addObject("successMessage", "The product updated successfully");
 			} else 
 			{

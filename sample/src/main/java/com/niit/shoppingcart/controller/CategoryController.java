@@ -39,6 +39,7 @@ public class CategoryController {
 		category.setDescription(description);
 		if (categoryDAO.save(category)) {
 			mv.addObject("categorySuccessMessage", "The category created successfully");
+			httpSession.removeAttribute("selectedCategory");
 		} else {
 			mv.addObject("categoryErrorMessage", "Coulc not able to create category.  please contact admin");
 		}
@@ -52,6 +53,7 @@ public class CategoryController {
 
 		// call save method of categoryDAO
 		if (categoryDAO.update(category) == true) {
+			httpSession.removeAttribute("selectedCategory");
 			// add success message
 			mv.addObject("successMessage", "The category updated successfully");
 		} else {

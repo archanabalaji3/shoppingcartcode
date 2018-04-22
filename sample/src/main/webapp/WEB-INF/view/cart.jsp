@@ -6,8 +6,9 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  
 
 <title>My Cart</title>
 
@@ -58,7 +59,7 @@ ${noItems}
 			<input type="text" style="text-align:center;width:20%;" name="cartquantity" value="${cart.quantity}">
 			<button class="btn btn-primary" formaction="editcartqty/${cart.id}" method="post">+</button>
 		</td>
-		<td>${cart.price}</td>
+		<td>${cart.subtotal}</td>
 		<td><button style="width:50%;" class="btn btn-danger" formaction="deleteFromCart?id=${cart.id}" method="post"> Delete </button></td>
 		
       </tr>
